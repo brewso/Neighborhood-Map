@@ -4,7 +4,7 @@ var markersArray = [];
 function loadScript() {
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp' +
+    script.src = 'https://maps.googleapis.com/maps/api/js?v=3&api_key=AIzaSyCOQXx5vDbUdJwzFRGhOdaE9vYFIKxpJPs.exp' +
         '&signed_in=false&callback=initialize';
     document.body.appendChild(script);
 }
