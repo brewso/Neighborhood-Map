@@ -1,11 +1,15 @@
 var map;
 var markersArray = [];
+var flickrLocation = "downtown";
+var flickrLat = 44.9552873;
+var flickrLng = -93.3176149;
+
+
 
 function loadScript() {
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp' +
-        '&key=AIzaSyCOQXx5vDbUdJwzFRGhOdaE9vYFIKxpJPs&callback=initialize';
+    script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCOQXx5vDbUdJwzFRGhOdaE9vYFIKxpJPs&callback=initialize';
     document.body.appendChild(script);
 }
 window.onload = loadScript;
@@ -36,6 +40,7 @@ function initialize() {
     function resetMap() {
         map.setZoom(11);
         map.setCenter(mapOptions.center);
+        flickrLocation = "downtown";
     }
     $("#reset").click(function() {
         resetMap();
@@ -68,7 +73,8 @@ var markers = [{
     url: "mallofamerica.com",
     id: "nav0",
     visible: ko.observable(true),
-    boolTest: true
+    boolTest: true,
+    flickLocation: "the%20mall%20of%20america"
 }, {
     title: "Minnehaha Falls",
     lat: 44.9154592,
@@ -78,7 +84,8 @@ var markers = [{
     url: "minneapolisparks.org",
     id: "nav1",
     visible: ko.observable(true),
-    boolTest: true
+    boolTest: true,
+    flickLocation: "minnehaha%20falls"
 }, {
     title: "The Sculpture Garden",
     lat: 44.9699808,
@@ -88,7 +95,8 @@ var markers = [{
     url: "walkerart.org",
     id: "nav2",
     visible: ko.observable(true),
-    boolTest: true
+    boolTest: true,
+    flickLocation: "Sculpture%20garden"
 }, {
     title: "U.S. Bank Stadium",
     lat: 44.971863,
@@ -98,7 +106,8 @@ var markers = [{
     url: "usbankstadium.com",
     id: "nav3",
     visible: ko.observable(true),
-    boolTest: true
+    boolTest: true,
+    flickLocation: "us%20bank%20stadium"
 }, {
     title: "First Avenue",
     lat: 44.978702,
@@ -108,13 +117,36 @@ var markers = [{
     url: "first-avenue.com",
     id: "nav4",
     visible: ko.observable(true),
-    boolTest: true
+    boolTest: true,
+    flickLocation: "first%20avenue%20minneapolis"
+}, {
+    title: "Fat Lorenzo's",
+    lat: 44.9008211,
+    lng: -93.2475324,
+    streetAddress: "5600 Cedar Ave S",
+    cityAddress: "Minneapolis, MN 55417",
+    url: "fatlorenzos.com",
+    id: "nav5",
+    visible: ko.observable(true),
+    boolTest: true,
+    flickLocation: "fat%20lorenzos"
+}, {
+    title: "Paisley Park",
+    lat: 44.8618172,
+    lng: -93.5613845,
+    streetAddress: "7801 Audubon Rd",
+    cityAddress: "Chanhassen, MN 55317",
+    url: "officialpaisleypark.com",
+    id: "nav6",
+    visible: ko.observable(true),
+    boolTest: true,
+    flickLocation: "paisley%20park"
 }];
 
 //Get Google Street View Image for each inidividual marker
 //Passed lat and lng to get each image location
 //no image avaible for the falls so i found another
-var headingImageView = [5, 0, 5, 337, 171];
+var headingImageView = [5, 0, 5, 337, 171, 255, 118];
 var streetViewImage;
 var streetViewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=180x90&location=';
 
@@ -142,13 +174,24 @@ function setMarkers(location) {
                 url: 'img/marker.png',
                 size: new google.maps.Size(25, 40),
                 origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(12.5, 40)
+                anchor: new google.maps.Point(12.5, 40),
             },
             shape: {
                 coords: [1, 25, -40, -25, 1],
                 type: 'poly'
             }
         });
+
+//        marker.addListener('click', toggleBounce);
+//
+//      function toggleBounce() {
+//        if (marker.getAnimation() !== null) {
+//          marker.setAnimation(null);
+//        } else {
+//          marker.setAnimation(google.maps.Animation.BOUNCE);
+//        }
+//      }
+
 
         //function to place google street view images within info windows
         determineImage();
@@ -167,6 +210,8 @@ function setMarkers(location) {
 
         //Click marker to view infoWindow
         //zoom in and center location on click
+
+
         new google.maps.event.addListener(location[i].holdMarker, 'click', (function(marker, i) {
             return function() {
                 infowindow.setContent(location[i].contentString);
@@ -179,6 +224,15 @@ function setMarkers(location) {
                 }
                 map.setCenter(marker.getPosition());
                 location[i].picBoolTest = true;
+                location[i].holdMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function(){location[i].holdMarker.setAnimation(null); }, 1500);
+                flickrLocation = location[i].flickLocation;
+                flickrLat = location[i].lat;
+                flickrLng = location[i].lng;
+                getFlickrImages();
+            //    flickrPhotoArray = [];
+              //  imagesAreSet = false;
+
             };
         })(location[i].holdMarker, i));
 
@@ -192,6 +246,14 @@ function setMarkers(location) {
                 map.setZoom(16);
                 map.setCenter(marker.getPosition());
                 location[i].picBoolTest = true;
+                location[i].holdMarker.setAnimation(google.maps.Animation.DROP);
+                flickrLocation = location[i].flickLocation;
+                flickrLat = location[i].lat;
+                flickrLng = location[i].lng;
+                getFlickrImages();
+            //    flickrPhotoArray = [];
+            //    imagesAreSet = false;
+
             };
         })(location[i].holdMarker, i));
     }
@@ -244,19 +306,12 @@ function noNav() {
 function yesNav() {
     $("#search-nav").show();
     var scrollerHeight = $("#scroller").height() + 55;
-    if ($(window).height() < 600) {
-        $("#search-nav").animate({
-            height: scrollerHeight - 100,
-        }, 500, function() {
-            $(this).css('height', 'auto').css("max-height", 439);
-        });
-    } else {
+    var windowHeight = $(window).height();
         $("#search-nav").animate({
             height: scrollerHeight,
         }, 500, function() {
-            $(this).css('height', 'auto').css("max-height", 549);
+            $(this).css('height', 'auto').css("max-height", windowHeight-55);
         });
-    }
     $("#arrow").attr("src", "img/up-arrow.gif");
     isNavVisible = true;
 }
@@ -356,3 +411,94 @@ function hideWeather() {
 }
 
 $("#hide-weather").click(hideWeather);
+
+
+
+
+var flickrJSON;
+var flickrPhotoArray = [];
+var counter = 0;
+var imagesAreSet = false;
+
+
+//Binds click handler to flickr image to open modal
+$("#flickr").click(function() {
+    $(".modal").css("z-index", "3");
+    $(".modal").show();
+});
+
+//Binds click handler to x button to close modal
+$("#exit-modal").click(function() {
+    $(".modal").css("z-index", "0");
+    $(".modal").hide();
+    $('.flickr-image-container img').hide();
+    imagesAreSet = true;
+});
+
+//GET JSON from flickr
+//Display message if error getting flickr JSON
+function getFlickrImages() {
+		var flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=23a0c4ed44c29e78558d11f9942c9b7f&text='+flickrLocation+'&accuracy=16&lat='+flickrLat+'&lon='+flickrLng+'&format=json';
+        $.ajax({
+            url: flickrUrl,
+            dataType: 'jsonp',
+            jsonp: 'jsoncallback',
+            success: function(data) {
+                var photo = data.photos.photo;
+                flickrJSON = photo;
+            },
+            error: function() {
+				$('.flickr-image-container').append('<h1 style="text-align: center;">Sorry!</h1><br><h2 style="text-align: center;">Flickr Images Could Not Be Loaded</h2>');
+				$("#right-arrow").hide();
+				$("#left-arrow").hide();
+
+				}
+        });
+}
+getFlickrImages();
+
+
+
+//Get 25 random images from flickr JSON
+//Store image data in flickrPhotoArray
+//Hide all images except the first
+function setFlickrImages() {
+	if(imagesAreSet === false) {
+		for(var i=0; i < 2; i++) {
+			//var number = Math.floor((Math.random() * 250) + 1);
+			var photo = 'https://farm' + flickrJSON[i].farm + '.staticflickr.com/' + flickrJSON[i].server + '/' + flickrJSON[i].id + '_' + flickrJSON[i].secret + '.jpg';
+			flickrPhotoArray.push(photo);
+			$('.flickr-image-container').append('<img id="flickr-image' + i + '" src="' + photo + '" alt="' + flickrJSON[i].title + ' Flickr Image">');
+			$("#flickr-image" + i).hide();
+			if(i < 1) {
+				$("#flickr-image" + i).show();
+			}
+		}
+	} else {
+		$("#flickr-image" + counter).show();
+	}
+}
+$("#flickr").click(setFlickrImages, photo=null);
+
+//Bind click handler to arrow button to view next image
+function scrollForward() {
+	$('#flickr-image' + counter).hide();
+	counter += 1;
+	if(counter >= 2) {
+		counter = 0;
+	}
+	$('#flickr-image' + counter).fadeIn(300);
+}
+
+//Bind click handler to arrow button to view previous image
+function scrollBackWard() {
+	$('#flickr-image' + counter).hide();
+	counter -= 1;
+	if(counter < 0) {
+		counter = 2;
+	}
+	$('#flickr-image' + counter).fadeIn(300);
+}
+
+$("#right-arrow").click(scrollForward);
+$("#left-arrow").click(scrollBackWard);

@@ -18,11 +18,11 @@
     max-height: 549px;
     background-color: rgba(256, 256, 256, .9);
     border: solid 2px blue;
-    overflow: hidden;
+    overflow: auto;
 }
 #scroller {
     max-height: 480px;
-    overflow: scroll;
+    overflow: auto;
     margin: 0 5px;
 }
 #arrow {
