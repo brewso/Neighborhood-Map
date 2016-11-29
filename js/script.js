@@ -229,9 +229,8 @@ function setMarkers(location) {
                 flickrLocation = location[i].flickLocation;
                 flickrLat = location[i].lat;
                 flickrLng = location[i].lng;
-                getFlickrImages();
-            //    flickrPhotoArray = [];
-              //  imagesAreSet = false;
+              //  getFlickrImages();
+                imagesAreSet = false;
 
             };
         })(location[i].holdMarker, i));
@@ -250,9 +249,8 @@ function setMarkers(location) {
                 flickrLocation = location[i].flickLocation;
                 flickrLat = location[i].lat;
                 flickrLng = location[i].lng;
-                getFlickrImages();
-            //    flickrPhotoArray = [];
-            //    imagesAreSet = false;
+            //    getFlickrImages();
+                imagesAreSet = false;
 
             };
         })(location[i].holdMarker, i));
@@ -438,7 +436,7 @@ $("#exit-modal").click(function() {
 //GET JSON from flickr
 //Display message if error getting flickr JSON
 function getFlickrImages() {
-		var flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=23a0c4ed44c29e78558d11f9942c9b7f&text='+flickrLocation+'&accuracy=16&lat='+flickrLat+'&lon='+flickrLng+'&format=json';
+		var flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=23a0c4ed44c29e78558d11f9942c9b7f&text='+flickrLocation+'&accuracy=5&lat='+flickrLat+'&lon='+flickrLng+'&format=json';
         $.ajax({
             url: flickrUrl,
             dataType: 'jsonp',
@@ -454,37 +452,49 @@ function getFlickrImages() {
 
 				}
         });
+        console.log("got photos");
 }
-getFlickrImages();
+//getFlickrImages();
 
 
 
-//Get 25 random images from flickr JSON
+//Get random images from flickr JSON
 //Store image data in flickrPhotoArray
 //Hide all images except the first
 function setFlickrImages() {
 	if(imagesAreSet === false) {
-		for(var i=0; i < 2; i++) {
-			//var number = Math.floor((Math.random() * 250) + 1);
-			var photo = 'https://farm' + flickrJSON[i].farm + '.staticflickr.com/' + flickrJSON[i].server + '/' + flickrJSON[i].id + '_' + flickrJSON[i].secret + '.jpg';
+    removeFlickrImages();
+    getFlickrImages();
+		setTimeout(function() {for(var i=0; i < 10; i++) {
+			var number = Math.floor((Math.random() * 99) + 1);
+			var photo = 'https://farm' + flickrJSON[number].farm + '.staticflickr.com/' + flickrJSON[number].server + '/' + flickrJSON[number].id + '_' + flickrJSON[number].secret + '.jpg';
 			flickrPhotoArray.push(photo);
 			$('.flickr-image-container').append('<img id="flickr-image' + i + '" src="' + photo + '" alt="' + flickrJSON[i].title + ' Flickr Image">');
 			$("#flickr-image" + i).hide();
+      console.log("shit is added");
+      imagesAreSet = true;
 			if(i < 1) {
 				$("#flickr-image" + i).show();
-			}
 		}
+	}}, 1000);
 	} else {
 		$("#flickr-image" + counter).show();
 	}
 }
-$("#flickr").click(setFlickrImages, photo=null);
+//setTimeout(function(){setFlickrImages();}, 1500);
+function removeFlickrImages(){
+for(var i=0; i < 10; i++) {
+  $("#flickr-image" + i).remove();
+  console.log("shit is removed");
+}
+}
+$("#flickr").click(setFlickrImages);
 
 //Bind click handler to arrow button to view next image
 function scrollForward() {
 	$('#flickr-image' + counter).hide();
 	counter += 1;
-	if(counter >= 2) {
+	if(counter >= 10) {
 		counter = 0;
 	}
 	$('#flickr-image' + counter).fadeIn(300);
@@ -495,7 +505,7 @@ function scrollBackWard() {
 	$('#flickr-image' + counter).hide();
 	counter -= 1;
 	if(counter < 0) {
-		counter = 2;
+		counter = 10;
 	}
 	$('#flickr-image' + counter).fadeIn(300);
 }

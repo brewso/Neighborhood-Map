@@ -18,7 +18,7 @@
     max-height: 549px;
     background-color: rgba(256, 256, 256, .9);
     border: solid 2px blue;
-    overflow: auto;
+    overflow: hidden;
 }
 #scroller {
     max-height: 480px;
