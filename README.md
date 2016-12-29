@@ -1,23 +1,27 @@
-<strong>Udacity Neighborhood Map Project</strong><br/>
-By: Eric Brousseau
+Neighborhood Map Project BY: Eric Brousseau
 
-Follow the link to open the project:
+Click here!
 http://brewso.github.io/Neighborhood-Map
+OR
+UnPack files and Run index.html in your favorite web browser!
 
-Basic Description
-This project uses Google Maps API to display the Minneapolis, MN area.<br/>
-The markers display some of the main attractions of the Minneapolis, MN area. <br/>
-<br/>
-<strong>Functionality of the page includes:</strong> <br/>
-	An interactive navigation bar to filter map and navigation bar results using knockout.js, <br/>
-	Display of the current Minneapolis, MN weather forecast using Weather Underground API, <br/>
-	Display of Flickr images of downtown Minneapolis, <br/>
-		-all images are displayed in a modal window upon a click handler with scroll functionality<br/>
-	A reset map button, <br/>
-	Responsive design giving the SAP the ability to be used and viewed on all web modern browsing devices
 
-<strong>Sources:</strong><br/>
-http://knockoutjs.com/documentation/introduction.html<br/>
-http://api.jquery.com/<br/>
-http://www.w3schools.com/<br />
-https://developers.google.com/maps/
+This app is designed to show my favorite key points around the Twin cities metro area.
+There is a search function in a drop down list format that allows the user to search for a specific location out of the key points.
+Clicking on either the list item or the map marker will center the map, zoom to that location, and pop up an info window.
+The info window includes a google street view or better picture of that location along with some info on the specific location.
+
+In the upper left hand of the list is a box to display Accuweather current conditions, accuweather icon for the condition, and temp.
+
+The app is designed to be responsive to screen size and remove the list functionality when the screen is too cluttered.
+
+Location data provided by Google.
+
+
+Resources:
+
+Udacity GOOGLE MAPS APIS
+http://knockoutjs.com/documentation/html-binding.html
+https://developers.google.com
+https://apidev.accuweather.com/developers/
+http://www.w3schools.com/
