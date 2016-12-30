@@ -163,7 +163,7 @@ function startMap() {
 
     ko.applyBindings(new viewModel());
 }
-var accuwUrl = "https://dataservice.accuweather.com/currentconditions/v1/348794.json?language=en&apikey=" + accuweather;
+var accuwUrl = "http://dataservice.accuweather.com/currentconditions/v1/348794.json?language=en&apikey=" + accuweather;
 var accuIcon = "https://apidev.accuweather.com/developers/Media/Default/WeatherIcons/";
 /////////////////Gets current conditions for the location.////////////
 $.ajax({
