@@ -142,7 +142,7 @@ function determineImage(i) {
     var streetViewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=180x90&location=';
     var heading = [0, 0, 5, 337, 160, 255, 118];
     if (i == 0) {
-        return 'https://www.exploreminnesota.com/memberimage.ashx?id=9684&width=645&mar=1';
+        return 'http://www.exploreminnesota.com/memberimage.ashx?id=9684&width=645&mar=1';
     }
     if (i == 1) {
         return 'https://www.minnesotamonthly.com/Blogs/Minnesota-Journeys/April-2014/Minnehaha-Falls-At-Its-Scenic-Best-in-Spring/Minnehaha01.jpg';
