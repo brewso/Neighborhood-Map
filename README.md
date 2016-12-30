@@ -1,7 +1,7 @@
 Neighborhood Map Project BY: Eric Brousseau
 
 Click here!
-http://brewso.github.io/Neighborhood-Map
+https://brewso.github.io/Neighborhood-Map
 OR
 UnPack files and Run index.html in your favorite web browser!
 

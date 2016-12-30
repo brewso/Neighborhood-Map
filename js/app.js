@@ -69,7 +69,7 @@ var viewModel = function() {
     self.filter = ko.observable('');
     var largeInfo = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
-    var icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+    var icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
 
     //////sets new marker for each location////////
     for (var i = 0; i < locations.length; i++) {
@@ -116,7 +116,7 @@ function populateInfoWindow(mark, largeInfo, bounds, icon) {
     //////opens info window about location and zooms the map to the location while changing the icon/////
     map.setZoom(15);
     map.setCenter(mark.getPosition());
-    mark.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+    mark.setIcon('https://maps.google.com/mapfiles/ms/icons/green-dot.png');
     mark.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function() {
         mark.setAnimation(null);
@@ -142,10 +142,10 @@ function determineImage(i) {
     var streetViewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=180x90&location=';
     var heading = [0, 0, 5, 337, 160, 255, 118];
     if (i == 0) {
-        return 'http://www.exploreminnesota.com/memberimage.ashx?id=9684&width=645&mar=1';
+        return 'https://www.exploreminnesota.com/memberimage.ashx?id=9684&width=645&mar=1';
     }
     if (i == 1) {
-        return 'http://www.minnesotamonthly.com/Blogs/Minnesota-Journeys/April-2014/Minnehaha-Falls-At-Its-Scenic-Best-in-Spring/Minnehaha01.jpg';
+        return 'https://www.minnesotamonthly.com/Blogs/Minnesota-Journeys/April-2014/Minnehaha-Falls-At-Its-Scenic-Best-in-Spring/Minnehaha01.jpg';
     } else {
         return streetViewUrl + locations[i].position.lat + ',' + locations[i].position.lng + '&fov=75&heading=' + heading[i] + '&pitch=10';
     }
@@ -163,7 +163,7 @@ function startMap() {
 
     ko.applyBindings(new viewModel());
 }
-var accuwUrl = "http://dataservice.accuweather.com/currentconditions/v1/348794.json?language=en&apikey=" + accuweather;
+var accuwUrl = "https://dataservice.accuweather.com/currentconditions/v1/348794.json?language=en&apikey=" + accuweather;
 var accuIcon = "https://apidev.accuweather.com/developers/Media/Default/WeatherIcons/";
 /////////////////Gets current conditions for the location.////////////
 $.ajax({
