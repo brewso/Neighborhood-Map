@@ -2,7 +2,6 @@
 
 ///////////key variables for app to function///////////
 var center = {lat: 44.9552873,lng: -93.3176149},
-    accuweather = "g6xbpzaUcD1tGUMICwbwZcHSqzQQ4zp1",
     googleID = "AIzaSyCOQXx5vDbUdJwzFRGhOdaE9vYFIKxpJPs",
     map,
     loaded = 0;
@@ -296,10 +295,11 @@ function backWard() {
 }
 
 ////////***************************weather api************************************************///////////////
-var accuwUrl = "http://dataservice.accuweather.com/currentconditions/v1/348794.json?language=en&apikey=" + accuweather;
-var accuIcon = "https://apidev.accuweather.com/developers/Media/Default/WeatherIcons/";
-var weatherTop = ko.observable('');
-var weatherBottom = ko.observable('');
+var accuweather = "g6xbpzaUcD1tGUMICwbwZcHSqzQQ4zp1",
+    accuwUrl = "https://dataservice.accuweather.com/currentconditions/v1/348794.json?language=en&apikey=" + accuweather,
+    accuIcon = "https://apidev.accuweather.com/developers/Media/Default/WeatherIcons/",
+    weatherTop = ko.observable(''),
+    weatherBottom = ko.observable('');
 /////////////////Gets current conditions for the location.////////////
 $.ajax({
     type: "GET",
