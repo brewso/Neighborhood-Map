@@ -62,24 +62,16 @@ padding: 5px;
     border: solid 2px blue;
 }
 
-.reset-container {
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    bottom: 0;
-    float: middle;
-}
-
-.flickr {
+#flickr {
     position: absolute;
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, .3);
     z-index: 0;
-    display: none;
+    display: block;
 }
 
-.flickr-images {
+#flickr-images {
     max-width: 50%;
     max-height: 400px;
     margin: 15% auto;
@@ -90,7 +82,7 @@ padding: 5px;
     border: solid 2px blue;
 }
 
-.flickr-images img {
+#flickr-images img {
     position: relative;
     display: block;
     padding-bottom: 5%;

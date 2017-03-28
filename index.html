@@ -10,7 +10,7 @@
 <body>
     <main class="container">
       <div id="map-container">
-        <div id="map-error"><strong>We're sorry but there has been an error loading the app. Please Try Again.</strong></div>
+        <div id="map-error"></div>
       </div>
       <nav id="search-container">
 
@@ -44,19 +44,23 @@
         </div>
       </div>
 
-      <div class="flickr">
-          <div class="flickr-images">
-              <button id="exit-flickr">X</button>
-              <button id="right-arrow">></button>
-              <button id="left-arrow"><</button>
+      <div id="flickr" data-bind="visible: flickr">
+          <div id="flickr-images">
+              <button id="exit-flickr" data-bind="click: exitFlickr">X</button>
+              <button id="right-arrow" data-bind="click: forward">></button>
+              <button id="left-arrow" data-bind="click: backWard"><</button>
+              <div data-bind="foreach: flickrPhotoArray">
+                <img data-bind="attr: {src: url}, visible: active()"></img>
+              </div>
           </div>
       </div>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script src="js/app.js"></script>
     <!-- Make sure all other scripts are requested GMap API -->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCOQXx5vDbUdJwzFRGhOdaE9vYFIKxpJPs&callback=startMap" async defer onerror="mapError()"></script>
-    <script src="js/app.js"></script>
+
 
 </body>
 </html>

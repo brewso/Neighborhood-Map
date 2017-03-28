@@ -54,6 +54,11 @@ var styles = [
   {"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#92998d"}]}
 ];
 
+///handles google maps error
+function mapError(){
+  $("#map-error").append("<strong>We're sorry but there has been an error loading the app. Please Try Again.</strong>");
+}
+
 ////handles making the markers and properties of the markers////
 var Pin = function(map, icon, i, name, address, website, position) {
 
@@ -101,7 +106,7 @@ var Pin = function(map, icon, i, name, address, website, position) {
       imagesAreSet = false;
 		viewModel.navInfo(marker);
 	};
-}
+};
 
 //////viewModel function that runs through KO to set markers and allow the list to function when clicked////////////
 function viewModel() {
@@ -109,7 +114,7 @@ function viewModel() {
     self.filter = ko.observable('');
     var bounds = new google.maps.LatLngBounds();
     var largeInfo = new google.maps.InfoWindow();
-    var icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+    var icon = 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
     var markers = ko.observableArray();
 
     //////clicking on list or marker calls this function////////
@@ -176,7 +181,7 @@ function populateInfoWindow(mark, largeInfo, bounds, icon) {
 function determineImage(i) {
     var streetViewUrl = 'https://maps.googleapis.com/maps/api/streetview?size=180x90&location=';
     var heading = [0, 0, 5, 337, 160, 255, 118];
-    if (i == 0) {
+    if (i === 0) {
         return 'http://www.exploreminnesota.com/memberimage.ashx?id=9684&width=645&mar=1';
     }
     if (i == 1) {
@@ -201,28 +206,26 @@ function startMap() {
 
 ////////////////////////////////////Flickr/////////////////////////////////////////////
 var flickrJSON,
-    flickrPhotoArray = [],
+    activeImg = [],
+    flickrPhotoArray = ko.observableArray(),
     flickrLocation,
     flickrLat,
     flickrLng,
     counter = 0,
-    imagesAreSet = false;
+    imagesAreSet = false,
+    flickr = ko.observable(false);
 
 //Binds the button in the infowindow to open flickr
 function infoClick(){
-  $(".flickr").css("z-index", "3");
-  $(".flickr").show();
+  flickr(true);
   setFlickrImages();
 }
 
 //Binds the x button to close flickr
-$("#exit-flickr").click(function() {
-    $(".flickr").hide();
-    imagesAreSet = true;
-});
-
-$("#right-arrow").click(forward);
-$("#left-arrow").click(backWard);
+function exitFlickr(){
+  flickr(false);
+  imagesAreSet = true;
+}
 
 //GET JSON from flickr
 //Display message if error getting flickr JSON
@@ -234,13 +237,10 @@ function getFlickrImages() {
             jsonp: 'jsoncallback',
             success: function(data) {
                 var photo = data.photos.photo;
-                flickrJSON = photo;
+                flickrJSON = photo || 'No photo provided';
             },
             error: function() {
-				$('.flickr-image-container').append('<h1 style="text-align: center;">Sorry!</h1><br><h2 style="text-align: center;">Flickr Images Could Not Be Loaded</h2>');
-				$("#right-arrow").hide();
-				$("#left-arrow").hide();
-
+				          $('#flickr-images').append('<h1 style="text-align: center;">Sorry!</h1><br><h2 style="text-align: center;">Flickr Images Could Not Be Loaded</h2>');
 				}
         });
 }
@@ -255,43 +255,43 @@ function setFlickrImages() {
 		setTimeout(function() {for(var i=0; i < 10; i++) {
 			var number = Math.floor((Math.random() * 45) + 1);
 			var photo = 'https://farm' + flickrJSON[number].farm + '.staticflickr.com/' + flickrJSON[number].server + '/' + flickrJSON[number].id + '_' + flickrJSON[number].secret + '.jpg';
-			flickrPhotoArray.push(photo);
-			$('.flickr-images').append('<img id="flickr-image' + i + '" src="' + photo + '" alt="' + flickrJSON[i].title + ' Flickr Image">');
-			$("#flickr-image" + i).hide();
+      activeImg[i] = {
+        url: photo,
+        active: ko.observable(false),
+      };
+      flickrPhotoArray.push(activeImg[i]);
       imagesAreSet = true;
 			if(i < 1) {
-				$("#flickr-image" + i).show();
+        activeImg[i].active(true);
 		}
 	}}, 1500);
 	} else {
-		$("#flickr-image" + counter).show();
+		flickrPhotoArray()[counter];
 	}
 }
 
 function removeFlickrImages(){
-for(var i=0; i < 10; i++) {
-  $("#flickr-image" + i).remove();
-}
+  flickrPhotoArray.removeAll();
 }
 
 //Bind click handler to arrow button to view next image
 function forward() {
-	$('#flickr-image' + counter).hide();
-	counter += 1;
-	if(counter >= 10) {
+  flickrPhotoArray()[counter].active(false);
+  counter += 1;
+  if(counter >= 10) {
 		counter = 0;
 	}
-	$('#flickr-image' + counter).fadeIn(300);
+  flickrPhotoArray()[counter].active(true);
 }
 
 //Bind click handler to arrow button to view previous image
 function backWard() {
-	$('#flickr-image' + counter).hide();
+	flickrPhotoArray()[counter].active(false);
 	counter -= 1;
 	if(counter < 0) {
-		counter = 10;
+		counter = 9;
 	}
-	$('#flickr-image' + counter).fadeIn(300);
+	flickrPhotoArray()[counter].active(true);
 }
 
 ////////***************************weather api************************************************///////////////
@@ -317,9 +317,9 @@ $.ajax({
             var list = $("#forecast ul");
             var iconNum;
             if (conditions.WeatherIcon <= 9) {
-                iconNum = '0' + conditions.WeatherIcon + '-s.png'
+                iconNum = '0' + conditions.WeatherIcon + '-s.png';
             } else {
-                iconNum = conditions.WeatherIcon + '-s.png'
+                iconNum = conditions.WeatherIcon + '-s.png';
             }
             weatherTop('<img style="width: 25px" src="' + accuIcon + iconNum + '">' + conditions.WeatherText);
             weatherBottom('Temp: ' + temp.Value + '° F');
@@ -328,6 +328,6 @@ $.ajax({
         /////////////Error handling of accuweather///////////
     error: function() {
       weatherTop('Sorry, Accuweather could not load!');
-      weatherBottom('Reload app to try again!')
+      weatherBottom('Reload app to try again!');
     }
-})
+});
